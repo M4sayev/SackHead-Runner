@@ -192,7 +192,9 @@ ctx.loadSprite("bottle", "../assets/bottle_sprite.png", {
     fall: { from: 10, to: 20, speed: 10 },
   },
 });
-ctx.loadSprite("trashCan", "../assets/trash_can.png", {});
+ctx.loadSprite("trashCan", "../assets/trash_can.png");
+
+ctx.loadSprite("bucket", "../assets/bucket.png");
 
 let score = 0;
 let birdsKilled = 0;
@@ -273,6 +275,11 @@ ctx.onLoad(() => {
   const birds = [];
   let OBSTACLE_SPEED = 20000;
 
+  const obstacleTypes = [
+    { sprite: "trashCan", scale: 3.5, offSet: 100 },
+    { sprite: "bucket", scale: 1, offSet: 60 },
+  ];
+
   function spawnObstacle() {
     if (!gameStarted) {
       setTimeout(spawnObstacle, 500);
@@ -282,10 +289,13 @@ ctx.onLoad(() => {
       setTimeout(spawnObstacle, 500);
       return;
     }
+
+    const type =
+      obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
     const obstacle = ctx.add([
-      ctx.sprite("trashCan"),
-      ctx.pos(player.pos.x + WIDTH + 200, HEIGHT - GROUND_HEIGHT - 80),
-      ctx.scale(3),
+      ctx.sprite(type.sprite),
+      ctx.pos(player.pos.x + WIDTH + 200, HEIGHT - GROUND_HEIGHT - type.offSet),
+      ctx.scale(type.scale),
       ctx.area({ scale: 0.8 }),
       ctx.body({ isStatic: true }),
       "obstacle",
@@ -303,7 +313,13 @@ ctx.onLoad(() => {
       setTimeout(spawnBird, 1000);
       return;
     }
-    const birdY = HEIGHT * 0.3 + Math.random() * (HEIGHT * 0.5);
+
+    const patternType = Math.floor(Math.random() * 3);
+    const maxJumpHeight = HEIGHT * 0.4;
+    const minY = HEIGHT - GROUND_HEIGHT - maxJumpHeight;
+    const maxY = HEIGHT - GROUND_HEIGHT - 50;
+    const birdY = minY + Math.random() * (maxY - minY);
+
     const bird = ctx.add([
       ctx.sprite("bird", { anim: "fly" }),
       ctx.pos(player.pos.x + WIDTH + 200, birdY),
@@ -312,6 +328,35 @@ ctx.onLoad(() => {
       "bird",
     ]);
     birds.push(bird);
+
+    let t = 0;
+    const speed = 400 + Math.random() * 200;
+    const amplitude = 50 + Math.random() * 70;
+
+    bird.onUpdate(() => {
+      if (gamePaused || !gameStarted) return;
+
+      bird.move(-speed * ctx.dt(), 0);
+
+      if (patternType === 1) {
+        bird.pos.y += Math.sin(t * 5) * amplitude * ctx.dt();
+      } else if (patternType === 2) {
+        bird.pos.y += (t % 2 === 0 ? 1 : -1) * amplitude * ctx.dt();
+      }
+      t += ctx.dt();
+
+      // remove if off-screen
+      if (
+        bird.pos.x + bird.width < player.pos.x - WIDTH / 2 ||
+        bird.pos.y + bird.height < 0 ||
+        bird.pos.y > HEIGHT
+      ) {
+        ctx.destroy(bird);
+        const index = birds.indexOf(bird);
+        if (index > -1) birds.splice(index, 1);
+      }
+    });
+
     setTimeout(spawnBird, 5000 + Math.random() * 3000);
   }
 
