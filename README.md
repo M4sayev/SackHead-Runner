@@ -1,6 +1,6 @@
 SackHead Runner
 
-SackHead Runner is a 2D browser-based side-scroller where you control a SackHead - workaholic that hides has an alter ego - navigating obstacles and fending off birds by throwing bottles. Survive as long as possible and rack up your score!
+SackHead Runner is a 2D browser-based side-scroller where you control a SackHead - workaholic that doesn't like birds. By day, he works...By night he runs, jumping over obstacles and fending off birds by throwing bottles. Survive as long as possible and rack up your score!
 
 🎮 Gameplay
 
