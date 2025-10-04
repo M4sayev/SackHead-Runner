@@ -49,8 +49,8 @@ Browser audio restrictions are handled by starting muted and fading in volume on
 
 Clone the repository:
 
-git clone https://github.com/yourusername/BottleBird-Runner.git
-cd BottleBird-Runner
+git clone https://github.com/M4sayev/SackHead-Runner.git
+cd SackHead-Runner
 
 
 Install dependencies:
@@ -69,7 +69,7 @@ Enjoy the game!
 
 ## 🖥️ Demo
 
-![BottleBird Runner Demo](./assets/demo.gif)
+![SackHead Runner Demo](./assets/demo.gif)
 
 📌 License / Credits
 
